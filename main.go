@@ -21,6 +21,7 @@ const (
 	accessKeyVariable        = "ASB_ACCESS_KEY"
 	topicVariable            = "ASB_TOPIC"
 	subscriptionNameVariable = "ASB_SUBSCRIPTION"
+	connectionStringVariable = "ASB_CONNECTION_STRING"
 )
 
 func main() {
@@ -97,13 +98,24 @@ func loadConfigs() (AmqpConfig, error) {
 	accessKey := os.Getenv(accessKeyVariable)
 	topic := os.Getenv(topicVariable)
 	subscriptionName := os.Getenv(subscriptionNameVariable)
+	connectionString := os.Getenv(connectionStringVariable)
 
-	if brokerUrl == "" || accessKeyName == "" || accessKey == "" || topic == "" || subscriptionName == "" {
-		return AmqpConfig{}, fmt.Errorf("missing one or more required environment variables")
+	if topic == "" || subscriptionName == "" {
+		return AmqpConfig{}, fmt.Errorf("environment variables %s (topic) and %s (subscription name) are required",
+			topicVariable, subscriptionNameVariable)
 	}
 
-	encodedKey := url.QueryEscape(accessKey)
-	connectionString := fmt.Sprintf("amqps://%s:%s@%s", accessKeyName, encodedKey, brokerUrl)
+	if connectionString == "" {
+		if brokerUrl == "" || accessKeyName == "" || accessKey == "" {
+			return AmqpConfig{},
+				fmt.Errorf(
+					`environment variables %s (broker URL), %s (access key name), and %s (access key) are required 
+				when %s (connection string) is not provided`, brokerUrlVariable, accessKeyNameVariable,
+					accessKeyVariable, connectionStringVariable)
+		}
+		encodedKey := url.QueryEscape(accessKey)
+		connectionString = fmt.Sprintf("amqps://%s:%s@%s", accessKeyName, encodedKey, brokerUrl)
+	}
 
 	subscription := fmt.Sprintf("%s/subscriptions/%s", topic, subscriptionName)
 

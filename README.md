@@ -1,6 +1,6 @@
 # AMQP Pub-Sub with Azure Service Bus in Go
 
-This is a demo project showcasing a simple **Publisher-Subscriber** implementation using **Azure Service Bus** over **AMQP** with the `go-amqp` library. It includes:
+This is a demo project showcasing a simple **Publisher-Subscriber** implementation using [**Azure Service Bus**](https://learn.microsoft.com/en-us/azure/service-bus-messaging/service-bus-messaging-overview) over **AMQP** with the [`go-amqp`](github.com/Azure/go-amqp) library. It includes:
 
 - A REST API built using Gin to publish messages
 - A background subscriber that listens to messages from a Service Bus topic subscription
@@ -26,9 +26,10 @@ Set the following environment variables before running the app:
 
 | Variable Name             | Description                                 |
 |--------------------------|---------------------------------------------|
-| `ASB_BROKER_URL`         | Azure Service Bus FQDN (e.g., `yournamespace.servicebus.windows.net`) |
-| `ASB_ACCESS_KEY_NAME`    | SAS Policy Name (e.g., `RootManageSharedAccessKey`) |
-| `ASB_ACCESS_KEY`         | SAS Policy Key                              |
+| `ASB_CONNECTION_STRING`  | Full connection string for Azure Service Bus <br> - *Optional*|
+| `ASB_BROKER_URL`         | Azure Service Bus FQDN (e.g., `yournamespace.servicebus.windows.net`) <br> - *Required if the connection string is not provided* |
+| `ASB_ACCESS_KEY_NAME`    | SAS Policy Name (e.g., `RootManageSharedAccessKey`) <br> - *Required if the connection string is not provided*|
+| `ASB_ACCESS_KEY`         | SAS Policy Key <br> - *Required if the connection string is not provided*|
 | `ASB_TOPIC`              | Topic name                                  |
 | `ASB_SUBSCRIPTION`       | Subscription name under the topic           |
 
